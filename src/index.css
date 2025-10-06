@@ -1,0 +1,182 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Aronium Dark Theme - inspired by POS interface */
+    --background: 210 11% 15%; /* #1f2937 dark gray background */
+    --foreground: 210 40% 95%; /* #f1f5f9 light gray text */
+    --card: 210 11% 18%; /* #2d3748 darker cards */
+    --card-foreground: 210 40% 95%;
+    --popover: 210 11% 18%;
+    --popover-foreground: 210 40% 95%;
+    --primary: 180 100% 40%; /* #00cccc teal primary */
+    --primary-foreground: 210 11% 15%;
+    --secondary: 210 11% 25%; /* #374151 secondary */
+    --secondary-foreground: 210 40% 90%;
+    --muted: 210 11% 20%; /* #344154 muted */
+    --muted-foreground: 210 20% 65%; /* #94a3b8 muted text */
+    --accent: 180 50% 25%; /* #1a4d4d dark teal accent */
+    --accent-foreground: 180 100% 85%;
+    --destructive: 0 84% 60%; /* #ef4444 red */
+    --destructive-foreground: 210 40% 98%;
+    --border: 210 11% 25%; /* #374151 borders */
+    --input: 210 11% 20%; /* #2d3748 inputs */
+    --ring: 180 100% 40%; /* #00cccc focus ring */
+    --radius: 0.375rem;
+    
+    /* Custom Aronium colors */
+    --aronium-teal: 180 100% 40%;
+    --aronium-teal-light: 180 100% 85%;
+    --aronium-teal-dark: 180 50% 25%;
+    --aronium-green: 120 100% 40%;
+    --aronium-surface: 210 11% 18%;
+    --aronium-surface-hover: 210 11% 22%;
+  }
+
+  .dark {
+    /* Same as root for consistent dark theme */
+    --background: 210 11% 15%;
+    --foreground: 210 40% 95%;
+    --card: 210 11% 18%;
+    --card-foreground: 210 40% 95%;
+    --popover: 210 11% 18%;
+    --popover-foreground: 210 40% 95%;
+    --primary: 180 100% 40%;
+    --primary-foreground: 210 11% 15%;
+    --secondary: 210 11% 25%;
+    --secondary-foreground: 210 40% 90%;
+    --muted: 210 11% 20%;
+    --muted-foreground: 210 20% 65%;
+    --accent: 180 50% 25%;
+    --accent-foreground: 180 100% 85%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 210 11% 25%;
+    --input: 210 11% 20%;
+    --ring: 180 100% 40%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+  }
+}
+
+@layer components {
+  .sophisticated-table {
+    border-collapse: collapse;
+    width: 100%;
+    --aronium-hovered: hsl(var(--aronium-teal) / 0.15);
+    --aronium-sibling: hsl(var(--aronium-teal) / 0.08);
+    --aronium-header-hover: hsl(var(--aronium-teal-dark));
+    background: hsl(var(--card));
+  }
+
+  .sophisticated-table :where(td, th) {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    white-space: nowrap;
+    font-weight: 400;
+    font-size: 0.875rem;
+    border-bottom: 1px solid hsl(var(--border));
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+
+  .sophisticated-table th {
+    background: hsl(var(--aronium-surface));
+    font-weight: 600;
+    color: hsl(var(--foreground));
+    border-bottom: 2px solid hsl(var(--aronium-teal));
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    cursor: pointer;
+    user-select: none;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+
+  .sophisticated-table th:hover {
+    background: var(--aronium-header-hover);
+    color: hsl(var(--aronium-teal-light));
+  }
+
+  .sophisticated-table td {
+    color: hsl(var(--muted-foreground));
+    background: hsl(var(--card));
+  }
+
+  .sophisticated-table td:hover {
+    background: hsl(var(--aronium-teal) / 0.25) !important;
+    color: hsl(var(--foreground)) !important;
+    font-weight: 500;
+    box-shadow: 0 4px 12px hsl(var(--aronium-teal) / 0.3);
+    z-index: 1;
+    border-radius: 0.25rem;
+  }
+
+  .table-scroll {
+    overflow: auto;
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--aronium-teal)) hsl(var(--muted));
+    background: hsl(var(--card));
+    width: fit-content;
+    min-width: 100%;
+  }
+
+  .table-scroll::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .table-scroll::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
+    border-radius: 4px;
+  }
+
+  .table-scroll::-webkit-scrollbar-thumb {
+    background: hsl(var(--aronium-teal));
+    border-radius: 4px;
+  }
+
+  .table-scroll::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--aronium-teal-light));
+  }
+
+  /* Aronium-style buttons and controls */
+  .aronium-button {
+    background: hsl(var(--aronium-teal));
+    color: hsl(var(--background));
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .aronium-button:hover {
+    background: hsl(var(--aronium-teal-light));
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px hsl(var(--aronium-teal) / 0.3);
+  }
+
+  .aronium-header {
+    background: linear-gradient(135deg, hsl(var(--background)), hsl(var(--card)));
+    border-bottom: 2px solid hsl(var(--aronium-teal));
+    backdrop-filter: blur(10px);
+  }
+}
