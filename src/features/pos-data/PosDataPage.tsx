@@ -129,7 +129,7 @@ export function PosDataPage() {
             </div>
             <div>
               <h1 className="text-lg font-bold text-foreground">DB Viewer</h1>
-              <div className="text-xs text-cyan-400 font-medium">Hardware Database</div>
+              <div className="text-xs text-cyan-400 font-medium">Aronium Database</div>
             </div>
           </div>
           {currentTable && (

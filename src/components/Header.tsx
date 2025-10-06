@@ -18,7 +18,7 @@ export function Header({ onSidebarToggle }: HeaderProps) {
           >
             <Menu className="h-4 w-4" />
           </Button>
-          <h1 className="text-xl font-semibold">Hardware DB Viewer</h1>
+          <h1 className="text-xl font-semibold">Aronium DB Viewer</h1>
         </div>
         
         <div className="flex items-center gap-4">

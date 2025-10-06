@@ -1,4 +1,4 @@
-# Hardware DB Viewer
+# Aronium DB Viewer
 
 A modern React-based single-page application for viewing and analyzing SQLite Point of Sale (POS) database files. Upload your .db files and explore the data through an intuitive interface with tabular views, analytics dashboard, and export capabilities.
 

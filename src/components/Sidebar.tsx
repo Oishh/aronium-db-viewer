@@ -41,7 +41,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
       <div className="p-4 border-b">
         <div className="flex items-center justify-between">
           {isOpen && (
-            <h2 className="text-lg font-semibold">Hardware DB</h2>
+            <h2 className="text-lg font-semibold">Aronium DB</h2>
           )}
           <Button
             variant="ghost"
@@ -97,7 +97,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
           "text-xs text-muted-foreground",
           !isOpen && "text-center"
         )}>
-          {isOpen ? "Hardware DB Viewer v1.0" : "v1.0"}
+          {isOpen ? "Aronium DB Viewer v1.0" : "v1.0"}
         </div>
       </div>
     </div>
