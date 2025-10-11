@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 interface SidebarProps {
   isOpen: boolean;
   onToggle: () => void;
+  isMobile?: boolean;
 }
 
 const navigationItems: NavigationItem[] = [
@@ -30,13 +31,18 @@ const navigationItems: NavigationItem[] = [
   }
 ];
 
-export function Sidebar({ isOpen, onToggle }: SidebarProps) {
+export function Sidebar({ isOpen, onToggle, isMobile = false }: SidebarProps) {
   const location = useLocation();
 
   return (
     <div className={cn(
       "bg-card border-r transition-all duration-300 flex flex-col",
-      isOpen ? "w-64" : "w-16"
+      // Mobile: fixed positioning with full width when open, hidden when closed
+      isMobile && "fixed top-0 left-0 h-full z-40 shadow-xl",
+      isMobile && isOpen && "w-64",
+      isMobile && !isOpen && "-translate-x-full w-64",
+      // Desktop: normal sidebar behavior
+      !isMobile && (isOpen ? "w-64" : "w-16")
     )}>
       <div className="p-4 border-b">
         <div className="flex items-center justify-between">
@@ -47,7 +53,10 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
             variant="ghost"
             size="sm"
             onClick={onToggle}
-            className="ml-auto"
+            className={cn(
+              isMobile ? "" : "ml-auto",
+              !isOpen && !isMobile && "mx-auto"
+            )}
           >
             {isOpen ? (
               <ChevronLeft className="h-4 w-4" />

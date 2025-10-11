@@ -13,10 +13,10 @@ export function DashboardPage() {
   };
 
   return (
-    <div className="p-6">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground">
+    <div className="p-4 md:p-6">
+      <div className="mb-6 md:mb-8">
+        <h1 className="text-2xl md:text-3xl font-bold">Dashboard</h1>
+        <p className="text-sm md:text-base text-muted-foreground">
           Overview of your POS database analytics
         </p>
       </div>

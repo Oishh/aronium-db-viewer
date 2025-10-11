@@ -1,13 +1,12 @@
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { TableIcon, Search, Download, ChevronDown, Database, ArrowUpDown, ArrowUp, ArrowDown, Filter, MoreHorizontal } from "lucide-react";
+import { TableIcon, Search, Download, ChevronDown, Database, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import { useDatabase } from "@/hooks/useDatabase";
 import { useState, useRef, useEffect, useMemo } from "react";
 
 type SortDirection = 'asc' | 'desc' | null;
 
 export function PosDataPage() {
-  const { isConnected, transactions, currentTable, isLoading, rawData, tables, selectTable } = useDatabase();
+  const { isConnected, currentTable, isLoading, rawData, tables, selectTable } = useDatabase();
   const [isTableSelectorOpen, setIsTableSelectorOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortColumn, setSortColumn] = useState<string | null>(null);
@@ -121,81 +120,98 @@ export function PosDataPage() {
   return (
     <div className="h-screen flex flex-col bg-background">
       {/* Aronium Header */}
-      <header className="aronium-header flex items-center justify-between px-8 py-4">
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-teal-600 rounded-lg flex items-center justify-center">
-              <Database className="h-5 w-5 text-white" />
+      <header className="aronium-header px-4 md:px-6 lg:px-8 py-4">
+        {/* Top row - Logo and current table */}
+        <div className="flex items-center justify-between mb-3 lg:mb-0">
+          <div className="flex items-center gap-3 md:gap-6 flex-1 min-w-0">
+            <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
+              <div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-teal-600 rounded-lg flex items-center justify-center">
+                <Database className="h-4 w-4 md:h-5 md:w-5 text-white" />
+              </div>
+              <div className="hidden sm:block">
+                <h1 className="text-base md:text-lg font-bold text-foreground">DB Viewer</h1>
+                <div className="text-xs text-cyan-400 font-medium">Aronium Database</div>
+              </div>
             </div>
-            <div>
-              <h1 className="text-lg font-bold text-foreground">DB Viewer</h1>
-              <div className="text-xs text-cyan-400 font-medium">Aronium Database</div>
-            </div>
+            {currentTable && (
+              <div className="flex items-center gap-2 px-2 md:px-3 py-1 bg-cyan-500/10 border border-cyan-500/20 rounded-md min-w-0">
+                <TableIcon className="h-3 w-3 md:h-4 md:w-4 text-cyan-400 flex-shrink-0" />
+                <span className="font-medium text-cyan-300 text-xs md:text-sm truncate">{currentTable}</span>
+                <span className="text-xs text-cyan-400 whitespace-nowrap">({filteredAndSortedData.rows.length})</span>
+              </div>
+            )}
           </div>
-          {currentTable && (
-            <div className="flex items-center gap-2 px-3 py-1 bg-cyan-500/10 border border-cyan-500/20 rounded-md">
-              <TableIcon className="h-4 w-4 text-cyan-400" />
-              <span className="font-medium text-cyan-300">{currentTable}</span>
-              <span className="text-xs text-cyan-400">({filteredAndSortedData.rows.length} rows)</span>
-            </div>
-          )}
-        </div>
-        
-        <div className="flex items-center gap-3">
-          {/* Search */}
-          <div className="relative">
-            <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-cyan-400" />
-            <Input 
-              placeholder="Search products by name, code or barcode..." 
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              disabled={!isConnected}
-              className="pl-10 w-80 bg-card border-cyan-500/30 focus:border-cyan-400 focus:ring-cyan-400/20 text-foreground placeholder:text-cyan-400/60"
-            />
-          </div>
-          
-          {/* Controls */}
-          <select
-            value={rowsPerPage}
-            onChange={(e) => {
-              setRowsPerPage(Number(e.target.value));
-              setCurrentPage(1);
-            }}
-            className="border border-cyan-500/30 rounded-md px-3 py-2 text-sm bg-card text-foreground focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/20"
-            disabled={!isConnected}
-          >
-            <option value={25}>25</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-            <option value={200}>200</option>
-          </select>
-          
-          {/* Table Selector */}
-          {isConnected && tables.length > 0 && (
-            <button
-              ref={buttonRef}
-              onClick={handleTableSelectorClick}
-              className="flex items-center gap-2 min-w-[140px] justify-between px-3 py-2 bg-cyan-500/10 border border-cyan-500/30 rounded-md text-sm text-cyan-300 hover:bg-cyan-500/20 transition-colors"
-              disabled={isLoading}
-            >
-              <Database className="h-4 w-4" />
-              <span className="truncate">{currentTable || "Select Table"}</span>
-              <ChevronDown className={`h-4 w-4 transition-transform ${isTableSelectorOpen ? 'rotate-180' : ''}`} />
-            </button>
-          )}
-          
-          <button 
-            className="aronium-button flex items-center gap-2"
+
+          {/* Export button - moved here for mobile */}
+          <button
+            className="aronium-button flex items-center gap-2 lg:hidden flex-shrink-0 text-sm px-3 py-2"
             disabled={!isConnected}
           >
             <Download className="h-4 w-4" />
-            Export
+            <span className="hidden sm:inline">Export</span>
           </button>
+        </div>
+
+        {/* Bottom row - Search and controls */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 md:gap-3 lg:justify-end">
+          {/* Search */}
+          <div className="relative flex-1 sm:flex-initial">
+            <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-cyan-400 pointer-events-none" />
+            <Input
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              disabled={!isConnected}
+              className="pl-10 w-full sm:w-64 lg:w-80 bg-card border-cyan-500/30 focus:border-cyan-400 focus:ring-cyan-400/20 text-foreground placeholder:text-cyan-400/60 text-sm"
+            />
+          </div>
+
+          {/* Controls row */}
+          <div className="flex items-center gap-2 md:gap-3">
+            {/* Rows per page */}
+            <select
+              value={rowsPerPage}
+              onChange={(e) => {
+                setRowsPerPage(Number(e.target.value));
+                setCurrentPage(1);
+              }}
+              className="border border-cyan-500/30 rounded-md px-2 md:px-3 py-2 text-sm bg-card text-foreground focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/20 flex-shrink-0"
+              disabled={!isConnected}
+            >
+              <option value={25}>25</option>
+              <option value={50}>50</option>
+              <option value={100}>100</option>
+              <option value={200}>200</option>
+            </select>
+
+            {/* Table Selector */}
+            {isConnected && tables.length > 0 && (
+              <button
+                ref={buttonRef}
+                onClick={handleTableSelectorClick}
+                className="flex items-center gap-1 md:gap-2 min-w-[100px] sm:min-w-[140px] justify-between px-2 md:px-3 py-2 bg-cyan-500/10 border border-cyan-500/30 rounded-md text-sm text-cyan-300 hover:bg-cyan-500/20 transition-colors flex-shrink-0"
+                disabled={isLoading}
+              >
+                <Database className="h-4 w-4 flex-shrink-0" />
+                <span className="truncate text-xs md:text-sm">{currentTable || "Select"}</span>
+                <ChevronDown className={`h-4 w-4 transition-transform flex-shrink-0 ${isTableSelectorOpen ? 'rotate-180' : ''}`} />
+              </button>
+            )}
+
+            {/* Export button - desktop only */}
+            <button
+              className="aronium-button hidden lg:flex items-center gap-2 flex-shrink-0"
+              disabled={!isConnected}
+            >
+              <Download className="h-4 w-4" />
+              Export
+            </button>
+          </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <div className="flex-1 p-8">
+      <div className="flex-1 p-4 md:p-6 lg:p-8">
         {!isConnected ? (
           <div className="flex items-center justify-center h-full">
             <div className="text-center">
@@ -273,38 +289,41 @@ export function PosDataPage() {
 
       {/* Aronium Footer with Pagination */}
       {isConnected && totalPages > 1 && (
-        <footer className="border-t border-cyan-500/30 px-8 py-4 bg-card/80 backdrop-blur-sm">
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-cyan-400">
-              Page <span className="font-semibold text-cyan-300">{currentPage}</span> of <span className="font-semibold text-cyan-300">{totalPages}</span> • 
-              <span className="font-semibold text-cyan-300 ml-1">{filteredAndSortedData.rows.length}</span> rows
+        <footer className="border-t border-cyan-500/30 px-4 md:px-6 lg:px-8 py-3 md:py-4 bg-card/80 backdrop-blur-sm">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="text-xs md:text-sm text-cyan-400 text-center sm:text-left">
+              Page <span className="font-semibold text-cyan-300">{currentPage}</span> of <span className="font-semibold text-cyan-300">{totalPages}</span>
+              <span className="hidden sm:inline"> • </span>
+              <span className="block sm:inline">
+                <span className="font-semibold text-cyan-300">{filteredAndSortedData.rows.length}</span> rows
+              </span>
             </div>
             <div className="flex items-center gap-1">
               <button
                 onClick={() => setCurrentPage(1)}
                 disabled={currentPage === 1}
-                className="px-3 py-1 text-sm bg-cyan-500/10 border border-cyan-500/30 rounded text-cyan-300 hover:bg-cyan-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-2 md:px-3 py-1 text-xs md:text-sm bg-cyan-500/10 border border-cyan-500/30 rounded text-cyan-300 hover:bg-cyan-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-w-[32px]"
               >
                 ««
               </button>
               <button
                 onClick={() => setCurrentPage(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="px-3 py-1 text-sm bg-cyan-500/10 border border-cyan-500/30 rounded text-cyan-300 hover:bg-cyan-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-2 md:px-3 py-1 text-xs md:text-sm bg-cyan-500/10 border border-cyan-500/30 rounded text-cyan-300 hover:bg-cyan-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-w-[32px]"
               >
                 ‹
               </button>
               <button
                 onClick={() => setCurrentPage(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="px-3 py-1 text-sm bg-cyan-500/10 border border-cyan-500/30 rounded text-cyan-300 hover:bg-cyan-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-2 md:px-3 py-1 text-xs md:text-sm bg-cyan-500/10 border border-cyan-500/30 rounded text-cyan-300 hover:bg-cyan-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-w-[32px]"
               >
                 ›
               </button>
               <button
                 onClick={() => setCurrentPage(totalPages)}
                 disabled={currentPage === totalPages}
-                className="px-3 py-1 text-sm bg-cyan-500/10 border border-cyan-500/30 rounded text-cyan-300 hover:bg-cyan-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-2 md:px-3 py-1 text-xs md:text-sm bg-cyan-500/10 border border-cyan-500/30 rounded text-cyan-300 hover:bg-cyan-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-w-[32px]"
               >
                 »»
               </button>
